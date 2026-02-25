@@ -1,0 +1,83 @@
+sources:
+  - name: "gov-policy"
+    type: rss
+    url: "https://www.gov.cn/rss/govzhengce.xml"
+    tags: ["policy", "culture-tourism"]
+    tier: "official"
+
+  - name: "gov-ministry"
+    type: rss
+    url: "https://www.gov.cn/rss/bumen.xml"
+    tags: ["policy", "transport"]
+    tier: "official"
+
+  - name: "stats-bureau"
+    type: rss
+    url: "https://www.stats.gov.cn/sj/rss.xml"
+    tags: ["macro", "stats"]
+    tier: "official"
+
+  - name: "google-news-travel-cn"
+    type: rss
+    url: "https://news.google.com/rss/search?q=china+travel+ctrip+tongcheng+qunar+didi+car+rental&hl=zh-CN&gl=CN&ceid=CN:zh-Hans"
+    tags: ["industry", "media"]
+    tier: "media"
+
+  - name: "google-news-earnings"
+    type: rss
+    url: "https://news.google.com/rss/search?q=ctrip+tongcheng+qunar+didi+earnings+GMV+MAU&hl=zh-CN&gl=CN&ceid=CN:zh-Hans"
+    tags: ["earnings", "operations"]
+    tier: "media"
+
+  - name: "google-news-mobility"
+    type: rss
+    url: "https://news.google.com/rss/search?q=ride+hailing+car+rental+rail+travel+growth+china&hl=zh-CN&gl=CN&ceid=CN:zh-Hans"
+    tags: ["mobility", "rental"]
+    tier: "media"
+
+entities:
+  core_clients:
+    - "Trip.com"
+    - "Ctrip"
+    - "Tongcheng"
+    - "Qunar"
+    - "Didi"
+    - "Huaxiaozhu"
+    - "Zhixing"
+    - "Gaotie Guanjia"
+    - "eHi"
+    - "CAR Inc"
+    - "Wukong"
+    - "\u643A\u7A0B"
+    - "\u540C\u7A0B"
+    - "\u53BB\u54EA\u513F"
+    - "\u6EF4\u6EF4"
+    - "\u82B1\u5C0F\u732A"
+    - "\u667A\u884C"
+    - "\u9AD8\u94C1\u7BA1\u5BB6"
+    - "\u4E00\u55E8\u79DF\u8F66"
+    - "\u795E\u5DDE\u79DF\u8F66"
+    - "\u609F\u7A7A\u79DF\u8F66"
+  watchlist:
+    - "Meituan"
+    - "Fliggy"
+    - "T3"
+    - "Hello"
+    - "Caocao"
+    - "JinJiang"
+    - "Huazhu"
+    - "\u7F8E\u56E2"
+    - "\u98DE\u732A"
+    - "\u66F9\u64CD"
+    - "\u54C8\u5570"
+    - "\u534E\u4F4F"
+
+priority_weights:
+  growth_impact: 1.0
+  brand_risk: 0.9
+  earnings_signal: 0.8
+  macro_trend: 0.7
+  competition: 0.6
+  channel_cost: 0.5
+  compliance: 0.4
+
