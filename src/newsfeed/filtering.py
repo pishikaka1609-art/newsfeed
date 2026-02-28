@@ -23,6 +23,7 @@ MACRO_PATTERN = r"holiday|spring travel|summer travel|passenger|\u8282\u5047\u65
 COMP_PATTERN = r"launch|release|partnership|subsidy|discount|price|\u4E0A\u7EBF|\u53D1\u5E03|\u5408\u4F5C|\u8865\u8D34|\u964D\u4EF7|\u63D0\u4EF7"
 COST_PATTERN = r"ad spend|CAC|ROI|commission|traffic cost|\u6295\u653E|\u4F63\u91D1|\u6D41\u91CF\u6210\u672C"
 REG_PATTERN = r"regulation|compliance|policy|guideline|\u76D1\u7BA1|\u5408\u89C4|\u6761\u4F8B|\u529E\u6CD5"
+MIN_IMPORTANCE_SCORE = 0.35
 
 
 def score_item(item: NewsItem, cfg: dict[str, Any], prefs: dict[str, list[str]] | None = None) -> NewsItem:
@@ -76,7 +77,7 @@ def score_item(item: NewsItem, cfg: dict[str, Any], prefs: dict[str, list[str]] 
     return item
 
 
-def strict_filter(items: list[NewsItem]) -> tuple[list[NewsItem], list[FilteredItem]]:
+def strict_filter(items: list[NewsItem], min_score: float = MIN_IMPORTANCE_SCORE) -> tuple[list[NewsItem], list[FilteredItem]]:
     kept: list[NewsItem] = []
     filtered: list[FilteredItem] = []
     for it in items:
@@ -86,10 +87,14 @@ def strict_filter(items: list[NewsItem]) -> tuple[list[NewsItem], list[FilteredI
             reason = "missing traceable source url"
         elif any(pat.lower() in lowered for pat in LOW_SIGNAL_PATTERNS):
             reason = "low signal content"
-        elif not check_url_alive(it.url):
-            reason = "source link unreachable"
-        elif it.score < 0.6:
+        elif it.score < min_score:
             reason = "importance score too low"
+        else:
+            alive = check_url_alive(it.url)
+            # Network instability should not wipe out the whole digest.
+            # Keep strong items even if instant reachability check fails.
+            if (not alive) and it.score < (min_score + 0.25):
+                reason = "source link unreachable and low score"
 
         if reason:
             filtered.append(
@@ -105,4 +110,3 @@ def strict_filter(items: list[NewsItem]) -> tuple[list[NewsItem], list[FilteredI
         kept.append(it)
     kept.sort(key=lambda x: (x.score, x.published_at or datetime.min), reverse=True)
     return kept, filtered
-

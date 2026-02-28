@@ -56,3 +56,8 @@ Note: Added hard fallback to rule-based summary when model calls fail (429 quota
 
 - Updated `requirements.txt` and `pyproject.toml`.
 Note: Added `tzdata` dependency to prevent `ZoneInfoNotFoundError` on Windows/Python environments without system tz database.
+
+## 2026-03-01 00:15:45 +08:00
+
+- Updated `src/newsfeed/filtering.py`.
+Note: Lowered minimum importance threshold (`0.6 -> 0.35`) and changed link reachability from hard reject to conditional reject, so temporary network failures do not cause empty digests.
