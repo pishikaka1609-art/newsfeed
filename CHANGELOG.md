@@ -48,3 +48,11 @@ Note: Stabilized string handling, kept strict filtering logic, and added bilingu
 
 - Added `scripts/bootstrap_env.ps1`; updated `README.md`.
 Note: Added a reliable session bootstrap for `git/python` when Windows PATH has not refreshed yet.
+
+## 2026-02-28 23:22:22 +08:00
+
+- Updated `src/newsfeed/summarizer.py`.
+Note: Added hard fallback to rule-based summary when model calls fail (429 quota, network error, provider errors), so pipeline no longer crashes.
+
+- Updated `requirements.txt` and `pyproject.toml`.
+Note: Added `tzdata` dependency to prevent `ZoneInfoNotFoundError` on Windows/Python environments without system tz database.

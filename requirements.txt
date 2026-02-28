@@ -8,3 +8,4 @@ python-dotenv==1.0.1
 openai==1.58.1
 tenacity==9.0.0
 pyyaml==6.0.2
+tzdata==2025.2

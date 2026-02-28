@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import logging
 from datetime import date
 from typing import Any
 
@@ -9,6 +10,8 @@ from tenacity import retry, stop_after_attempt, wait_fixed
 
 from .models import NewsItem
 from .storage import bump_daily_calls, get_daily_calls
+
+logger = logging.getLogger(__name__)
 
 
 def _rule_summary(items: list[NewsItem], max_chars: int = 300) -> str:
@@ -81,9 +84,13 @@ def llm_summary(
         f"Input: {payload}"
     )
 
-    must_read = _chat(client, cfg.openai_model, must_read_prompt, cfg.openai_max_output_tokens)
-    bump_daily_calls(state, day)
-    detail = _chat(client, cfg.openai_model, detail_prompt, cfg.openai_max_output_tokens)
-    bump_daily_calls(state, day)
-    return must_read[:300], detail
-
+    try:
+        must_read = _chat(client, cfg.openai_model, must_read_prompt, cfg.openai_max_output_tokens)
+        bump_daily_calls(state, day)
+        detail = _chat(client, cfg.openai_model, detail_prompt, cfg.openai_max_output_tokens)
+        bump_daily_calls(state, day)
+        return must_read[:300], detail
+    except Exception as exc:
+        # Never break the pipeline on model/provider errors (quota/network/model outage).
+        logger.warning("LLM summary failed, fallback to rule summary: %s", exc)
+        return _rule_summary(items, 300), _rule_summary(items, 2000)
